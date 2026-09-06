@@ -4,7 +4,7 @@ compatibility_date = "2025-01-01"
 
 [[send_email]]
 name = "EMAIL"
-destination_address = "jesse@amilliondreams.llc"
+destination_address = "jesse.biroscak@gmail.com"
 
 # Secrets (set via: wrangler secret put MAILER_SECRET --name amd-mailer):
 #   MAILER_SECRET  — shared secret; must match MAILER_SECRET in Pages env vars
