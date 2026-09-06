@@ -3,9 +3,10 @@ compatibility_date = "2025-01-01"
 pages_build_output_dir = "./dist"
 
 # Environment variables (non-secret)
-# Set PUBLIC_TURNSTILE_SITE_KEY here once you have it, or in Pages dashboard
-# [vars]
-# PUBLIC_TURNSTILE_SITE_KEY = "your-site-key-here"
+[vars]
+PUBLIC_TURNSTILE_SITE_KEY = "0x4AAAAAAEp3vW0v0bnYDXkK"
+# TURNSTILE_HOSTNAMES defaults to "amilliondreams.llc,amilliondreams.pages.dev" in the function
+# Override here or in Pages dashboard if you add more hostnames
 
 # Secrets (set in Pages dashboard → Settings → Environment variables):
 #   TURNSTILE_SECRET_KEY   — Cloudflare Turnstile secret key

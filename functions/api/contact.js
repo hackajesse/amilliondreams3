@@ -55,17 +55,43 @@ export async function onRequestPost(context) {
   const turnstileSecret = env.TURNSTILE_SECRET_KEY;
 
   if (turnstileSecret) {
-    const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        secret: turnstileSecret,
-        response: turnstileToken ?? '',
-        remoteip: request.headers.get('CF-Connecting-IP') ?? '',
-      }),
-    });
-    const verifyJson = await verifyRes.json();
-    if (!verifyJson.success) {
+    // Guard: token must be a non-empty string ≤ 2048 chars
+    if (!turnstileToken || turnstileToken.length > 2048) {
+      return json({ ok: false, message: 'Bot check failed. Please try again.' }, 403);
+    }
+
+    // Hostname allowlist — set TURNSTILE_HOSTNAMES as comma-separated list in Pages env
+    // e.g. "amilliondreams.llc,amilliondreams.pages.dev"
+    const allowedHostnames = new Set(
+      (env.TURNSTILE_HOSTNAMES ?? 'amilliondreams.llc,amilliondreams.pages.dev')
+        .split(',')
+        .map(h => h.trim())
+        .filter(Boolean)
+    );
+
+    let verifyJson;
+    try {
+      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        signal: AbortSignal.timeout(10_000),
+        body: new URLSearchParams({
+          secret: turnstileSecret,
+          response: turnstileToken,
+          remoteip: request.headers.get('CF-Connecting-IP') ?? '',
+        }),
+      });
+      if (!verifyRes.ok) throw new Error(`siteverify ${verifyRes.status}`);
+      verifyJson = await verifyRes.json();
+    } catch {
+      return json({ ok: false, message: 'Bot check timed out. Please try again.' }, 403);
+    }
+
+    if (
+      !verifyJson.success ||
+      verifyJson.action !== 'contact' ||
+      !allowedHostnames.has(verifyJson.hostname)
+    ) {
       return json({ ok: false, message: 'Bot check failed. Please try again.' }, 403);
     }
   }

@@ -80,9 +80,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? 'TURNSTILE
       <!-- Cloudflare Turnstile -->
       <div
         class="cf-turnstile"
+        id="turnstile-widget"
         data-sitekey={turnstileSiteKey}
         data-theme="dark"
         data-size="normal"
+        data-action="contact"
         data-callback="onTurnstileSuccess"
       ></div>
 
@@ -96,65 +98,89 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? 'TURNSTILE
 </section>
 
 <script is:inline>
-// Load Turnstile widget script
+// Load Turnstile — explicit render so we can track widgetId for single-use reset
 (function() {
   const s = document.createElement('script');
-  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad';
   s.async = true; s.defer = true;
   document.head.appendChild(s);
 })();
 
-function onTurnstileSuccess(token) {
-  window._turnstileToken = token;
+var _turnstileToken = null;
+var _turnstileWidgetId = null;
+
+function onTurnstileLoad() {
+  _turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
+    callback: function(token) { _turnstileToken = token; },
+    'expired-callback': function() { _turnstileToken = null; },
+    'error-callback': function() { _turnstileToken = null; },
+  });
 }
 
-const form = document.getElementById('contact-form');
-const status = document.getElementById('form-status');
-const submitBtn = document.getElementById('submit-btn');
+function onTurnstileSuccess(token) {
+  _turnstileToken = token;
+}
 
-form.addEventListener('submit', async (e) => {
+var form = document.getElementById('contact-form');
+var statusEl = document.getElementById('form-status');
+var submitBtn = document.getElementById('submit-btn');
+
+form.addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  // Validate required fields
-  const name = form.name.value.trim();
-  const email = form.email.value.trim();
-  const message = form.message.value.trim();
+  var name = form.elements['name'].value.trim();
+  var email = form.elements['email'].value.trim();
+  var message = form.elements['message'].value.trim();
   if (!name || !email || !message) {
     showStatus('error', 'Please fill in all required fields.');
     return;
   }
 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Sending…';
+  submitBtn.textContent = 'Sending\u2026';
 
-  const data = new FormData(form);
-  if (window._turnstileToken) {
-    data.set('cf-turnstile-response', window._turnstileToken);
+  var data = new FormData(form);
+  if (_turnstileToken) {
+    data.set('cf-turnstile-response', _turnstileToken);
   }
 
   try {
-    const res = await fetch('/api/contact', { method: 'POST', body: data });
+    var res = await fetch('/api/contact', { method: 'POST', body: data });
     if (res.ok) {
-      showStatus('success', "Message sent — I'll be in touch within one business day.");
+      showStatus('success', "Message sent \u2014 I\u2019ll be in touch within one business day.");
       form.reset();
       submitBtn.textContent = 'Sent';
+      // Reset widget so the token can't be replayed
+      if (_turnstileWidgetId !== null && window.turnstile) {
+        window.turnstile.reset(_turnstileWidgetId);
+      }
+      _turnstileToken = null;
     } else {
-      const body = await res.json().catch(() => ({}));
+      var body = await res.json().catch(function() { return {}; });
       showStatus('error', body.message || 'Something went wrong. Try again or reach out on LinkedIn.');
       submitBtn.disabled = false;
       submitBtn.textContent = 'Send message';
+      // Reset widget — token is single-use, must refresh on retry
+      if (_turnstileWidgetId !== null && window.turnstile) {
+        window.turnstile.reset(_turnstileWidgetId);
+      }
+      _turnstileToken = null;
     }
-  } catch {
+  } catch(err) {
     showStatus('error', 'Network error. Check your connection and try again.');
     submitBtn.disabled = false;
     submitBtn.textContent = 'Send message';
+    if (_turnstileWidgetId !== null && window.turnstile) {
+      window.turnstile.reset(_turnstileWidgetId);
+    }
+    _turnstileToken = null;
   }
 });
 
 function showStatus(type, msg) {
-  status.hidden = false;
-  status.className = 'form-status form-status--' + type;
-  status.textContent = msg;
+  statusEl.hidden = false;
+  statusEl.className = 'form-status form-status--' + type;
+  statusEl.textContent = msg;
 }
 </script>
 
