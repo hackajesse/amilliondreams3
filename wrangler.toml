@@ -2,12 +2,6 @@ name = "amilliondreams"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "./dist"
 
-[build]
-command = "npm run build"
-
-[build.environment]
-NODE_VERSION = "22"
-
 # Environment variables (non-secret)
 # Set PUBLIC_TURNSTILE_SITE_KEY here once you have it, or in Pages dashboard
 # [vars]
@@ -21,3 +15,8 @@ NODE_VERSION = "22"
 # Email Workers send_email binding is configured in the Pages dashboard under
 # Settings → Functions → Email bindings (name: EMAIL).
 # Do NOT declare it in wrangler.toml for Pages projects.
+#
+# Build settings (git-connected deploys) are set in the CF dashboard:
+#   Build command:    npm run build
+#   Build output dir: dist
+#   Node version:     22  (or .node-version file is read automatically)
