@@ -2,22 +2,18 @@ name = "amilliondreams"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "./dist"
 
-# Environment variables (non-secret)
 [vars]
 PUBLIC_TURNSTILE_SITE_KEY = "0x4AAAAAAEp3vW0v0bnYDXkK"
 # TURNSTILE_HOSTNAMES defaults to "amilliondreams.llc,amilliondreams.pages.dev" in the function
-# Override here or in Pages dashboard if you add more hostnames
 
 # Secrets (set in Pages dashboard → Settings → Environment variables):
 #   TURNSTILE_SECRET_KEY   — Cloudflare Turnstile secret key
-#   CONTACT_TO             — your real inbox address (e.g. jesse@yourdomain.com)
+#   CONTACT_TO             — your real inbox address
 #   CONTACT_FROM           — send-from address (optional, default: noreply@amilliondreams.llc)
 #
-# Email Workers send_email binding is configured in the Pages dashboard under
-# Settings → Functions → Email bindings (name: EMAIL).
-# Do NOT declare it in wrangler.toml for Pages projects.
-#
-# Build settings (git-connected deploys) are set in the CF dashboard:
-#   Build command:    npm run build
-#   Build output dir: dist
-#   Node version:     22  (or .node-version file is read automatically)
+# Email is sent via the amd-mailer Worker (workers/mailer/).
+# The Pages Function calls it via fetch("https://amd-mailer.<account>.workers.dev/send")
+# with a shared MAILER_SECRET for auth.
+# Set MAILER_SECRET as an encrypted secret in both:
+#   - Pages dashboard (used by the Pages Function to authenticate outbound calls)
+#   - amd-mailer Worker secrets (used to verify incoming calls)

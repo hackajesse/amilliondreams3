@@ -1,0 +1,10 @@
+name = "amd-mailer"
+main = "index.js"
+compatibility_date = "2025-01-01"
+
+[[send_email]]
+name = "EMAIL"
+destination_address = "jesse@amilliondreams.llc"
+
+# Secrets (set via: wrangler secret put MAILER_SECRET --name amd-mailer):
+#   MAILER_SECRET  — shared secret; must match MAILER_SECRET in Pages env vars

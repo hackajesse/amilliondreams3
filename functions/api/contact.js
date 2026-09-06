@@ -6,13 +6,15 @@
  *   2. Required fields (name, email, message)
  *   3. Cloudflare Turnstile token
  *
- * Sends email via Cloudflare Email Workers send_email binding.
+ * Sends email via the amd-mailer Worker (Workers support send_email; Pages does not).
  *
  * Environment:
- *   EMAIL            — send_email binding (configured in wrangler.toml / Pages dashboard)
- *   CONTACT_TO       — encrypted secret: destination inbox
+ *   MAILER_URL        — Worker URL, e.g. https://amd-mailer.<subdomain>.workers.dev
+ *   MAILER_SECRET     — shared secret matching the Worker's MAILER_SECRET
+ *   CONTACT_TO        — encrypted secret: destination inbox
+ *   CONTACT_FROM      — optional var: sending address, defaults to noreply@amilliondreams.llc
  *   TURNSTILE_SECRET_KEY — encrypted secret: Turnstile secret key
- *   CONTACT_FROM     — optional var: sending address, defaults to noreply@amilliondreams.llc
+ *   TURNSTILE_HOSTNAMES  — optional: comma-separated hostname allowlist
  */
 
 export async function onRequestPost(context) {
@@ -96,14 +98,14 @@ export async function onRequestPost(context) {
     }
   }
 
-  // 4. Send email
+  // 4. Send email via amd-mailer Worker
   const to      = env.CONTACT_TO;
   const from    = env.CONTACT_FROM ?? 'noreply@amilliondreams.llc';
-  const emailBinding = env.EMAIL;
+  const mailerUrl    = env.MAILER_URL;
+  const mailerSecret = env.MAILER_SECRET;
 
-  if (!emailBinding || !to) {
-    // Email not yet configured — log and return graceful error in non-prod
-    console.error('Email binding or CONTACT_TO not configured.');
+  if (!mailerUrl || !mailerSecret || !to) {
+    console.error('Mailer not configured (MAILER_URL, MAILER_SECRET, or CONTACT_TO missing).');
     return json({ ok: false, message: 'Contact form not fully configured yet. Please reach out on LinkedIn.' }, 503);
   }
 
@@ -137,16 +139,22 @@ export async function onRequestPost(context) {
   `;
 
   try {
-    await emailBinding.send({
-      to,
-      from,
-      replyTo: email,
-      subject,
-      text,
-      html,
+    const mailerRes = await fetch(`${mailerUrl}/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-mailer-secret': mailerSecret,
+      },
+      signal: AbortSignal.timeout(10_000),
+      body: JSON.stringify({ to, from, replyTo: email, subject, text, html }),
     });
+    if (!mailerRes.ok) {
+      const err = await mailerRes.text().catch(() => '');
+      console.error('Mailer error:', mailerRes.status, err);
+      return json({ ok: false, message: 'Failed to send message. Please try again or reach out on LinkedIn.' }, 500);
+    }
   } catch (err) {
-    console.error('Email send error:', err);
+    console.error('Mailer fetch error:', err);
     return json({ ok: false, message: 'Failed to send message. Please try again or reach out on LinkedIn.' }, 500);
   }
 
