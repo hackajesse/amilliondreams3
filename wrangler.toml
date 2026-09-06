@@ -2,9 +2,16 @@ name = "amilliondreams"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "./dist"
 
-[vars]
-# PUBLIC_TURNSTILE_SITE_KEY set here once you have it from Cloudflare dashboard
-# CONTACT_TO and TURNSTILE_SECRET_KEY must be set as encrypted secrets in Pages dashboard
+# Environment variables (non-secret)
+# Set PUBLIC_TURNSTILE_SITE_KEY here once you have it, or in Pages dashboard
+# [vars]
+# PUBLIC_TURNSTILE_SITE_KEY = "your-site-key-here"
 
-[[send_email]]
-name = "EMAIL"
+# Secrets (set in Pages dashboard → Settings → Environment variables):
+#   TURNSTILE_SECRET_KEY   — Cloudflare Turnstile secret key
+#   CONTACT_TO             — your real inbox address
+#   CONTACT_FROM           — send-from address (optional, default: noreply@amilliondreams.llc)
+#
+# Email Workers send_email binding is configured in the Pages dashboard under
+# Settings → Functions → Email bindings (name: EMAIL).
+# Do NOT declare it in wrangler.toml for Pages projects.
