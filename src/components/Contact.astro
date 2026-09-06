@@ -111,6 +111,7 @@ var _turnstileWidgetId = null;
 
 function onTurnstileLoad() {
   _turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
+    action: 'contact',
     callback: function(token) { _turnstileToken = token; },
     'expired-callback': function() { _turnstileToken = null; },
     'error-callback': function() { _turnstileToken = null; },

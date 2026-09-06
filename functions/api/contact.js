@@ -62,10 +62,9 @@ export async function onRequestPost(context) {
       return json({ ok: false, message: 'Bot check failed. Please try again.' }, 403);
     }
 
-    // Hostname allowlist — set TURNSTILE_HOSTNAMES as comma-separated list in Pages env
-    // e.g. "amilliondreams.llc,amilliondreams.pages.dev"
+    // Hostname allowlist — exact hosts plus any *.amilliondreams.pages.dev preview
     const allowedHostnames = new Set(
-      (env.TURNSTILE_HOSTNAMES ?? 'amilliondreams.llc,amilliondreams.pages.dev')
+      (env.TURNSTILE_HOSTNAMES ?? 'amilliondreams.llc,www.amilliondreams.llc,amilliondreams.pages.dev')
         .split(',')
         .map(h => h.trim())
         .filter(Boolean)
@@ -89,11 +88,21 @@ export async function onRequestPost(context) {
       return json({ ok: false, message: 'Bot check timed out. Please try again.' }, 403);
     }
 
-    if (
-      !verifyJson.success ||
-      verifyJson.action !== 'contact' ||
-      !allowedHostnames.has(verifyJson.hostname)
-    ) {
+    const hostnameOk =
+      allowedHostnames.has(verifyJson.hostname) ||
+      (typeof verifyJson.hostname === 'string' &&
+        verifyJson.hostname.endsWith('.amilliondreams.pages.dev'));
+
+    // Action is required when present; missing action is tolerated for older widgets
+    const actionOk = !verifyJson.action || verifyJson.action === 'contact';
+
+    if (!verifyJson.success || !actionOk || !hostnameOk) {
+      console.error('Turnstile reject', {
+        success: verifyJson.success,
+        action: verifyJson.action,
+        hostname: verifyJson.hostname,
+        errors: verifyJson['error-codes'],
+      });
       return json({ ok: false, message: 'Bot check failed. Please try again.' }, 403);
     }
   }
