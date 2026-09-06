@@ -80,12 +80,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? 'TURNSTILE
       <!-- Cloudflare Turnstile -->
       <div
         class="cf-turnstile"
-        id="turnstile-widget"
         data-sitekey={turnstileSiteKey}
         data-theme="dark"
         data-size="normal"
         data-action="contact"
         data-callback="onTurnstileSuccess"
+        data-error-callback="onTurnstileError"
+        data-expired-callback="onTurnstileExpired"
       ></div>
 
       <button type="submit" class="btn btn--primary form-submit" id="submit-btn">
@@ -98,28 +99,24 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? 'TURNSTILE
 </section>
 
 <script is:inline>
-// Load Turnstile — explicit render so we can track widgetId for single-use reset
 (function() {
-  const s = document.createElement('script');
-  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad';
-  s.async = true; s.defer = true;
+  var s = document.createElement('script');
+  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+  s.async = true;
+  s.defer = true;
   document.head.appendChild(s);
 })();
 
 var _turnstileToken = null;
-var _turnstileWidgetId = null;
-
-function onTurnstileLoad() {
-  _turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
-    action: 'contact',
-    callback: function(token) { _turnstileToken = token; },
-    'expired-callback': function() { _turnstileToken = null; },
-    'error-callback': function() { _turnstileToken = null; },
-  });
-}
 
 function onTurnstileSuccess(token) {
   _turnstileToken = token;
+}
+function onTurnstileError() {
+  _turnstileToken = null;
+}
+function onTurnstileExpired() {
+  _turnstileToken = null;
 }
 
 var form = document.getElementById('contact-form');
@@ -151,29 +148,21 @@ form.addEventListener('submit', async function(e) {
       showStatus('success', "Message sent \u2014 I\u2019ll be in touch within one business day.");
       form.reset();
       submitBtn.textContent = 'Sent';
-      // Reset widget so the token can't be replayed
-      if (_turnstileWidgetId !== null && window.turnstile) {
-        window.turnstile.reset(_turnstileWidgetId);
-      }
+      if (window.turnstile) window.turnstile.reset();
       _turnstileToken = null;
     } else {
       var body = await res.json().catch(function() { return {}; });
       showStatus('error', body.message || 'Something went wrong. Try again or reach out on LinkedIn.');
       submitBtn.disabled = false;
       submitBtn.textContent = 'Send message';
-      // Reset widget — token is single-use, must refresh on retry
-      if (_turnstileWidgetId !== null && window.turnstile) {
-        window.turnstile.reset(_turnstileWidgetId);
-      }
+      if (window.turnstile) window.turnstile.reset();
       _turnstileToken = null;
     }
-  } catch(err) {
+  } catch (err) {
     showStatus('error', 'Network error. Check your connection and try again.');
     submitBtn.disabled = false;
     submitBtn.textContent = 'Send message';
-    if (_turnstileWidgetId !== null && window.turnstile) {
-      window.turnstile.reset(_turnstileWidgetId);
-    }
+    if (window.turnstile) window.turnstile.reset();
     _turnstileToken = null;
   }
 });
