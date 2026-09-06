@@ -1,0 +1,138 @@
+---
+// About — condensed founder bio
+---
+<section class="section about" id="about" aria-labelledby="about-heading">
+  <div class="container about__inner">
+
+    <div class="about__mark" aria-hidden="true" data-reveal>
+      <img src="/logo-lantern-large.png" alt="" class="about__logo" width="220" height="220" loading="lazy" decoding="async" />
+    </div>
+
+    <div class="about__copy">
+      <span class="section-eyebrow" data-reveal>About</span>
+      <h2 class="section-heading" id="about-heading" data-reveal data-delay="1">Hi, I'm Jesse.</h2>
+
+      <div class="about__bio" data-reveal data-delay="2">
+        <p>
+          Before consulting, I spent over a decade leading high-stakes digital transformation in state
+          and local government: modernizing dispatching at the MBTA, shipping products for the City
+          of Boston and Mass.gov, scaling a volunteer civic tech organization from 6 to 4,000+ members,
+          and building two startups.
+        </p>
+        <p>
+          Now I run a Tech & AI consulting practice helping startups, traditional businesses, and
+          mid-sized companies grow, automate, and build the custom systems that move them forward.
+        </p>
+        <p>
+          When I'm not on client work I'm exploring what's possible with LLMs and AI, launching niche
+          mobile apps, or doing light construction on my home. (If you want to swap non-tech stories,
+          ask me about my time in Turkey, Syria, and Iraq — or the 14-foot wooden play structure I
+          designed and built for my kids.)
+        </p>
+      </div>
+
+      <div class="about__certs" data-reveal data-delay="3">
+        <span>Lean Six Sigma Green Belt</span>
+        <span>Human-Centered Design</span>
+        <span>GWU</span>
+      </div>
+
+      <a
+        href="https://www.linkedin.com/in/jessebiroscak/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="about__linkedin"
+        data-reveal
+        data-delay="4"
+      >
+        LinkedIn profile
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.about {
+  background: var(--color-navy);
+}
+
+.about__inner {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--space-16);
+  align-items: start;
+}
+
+.about__mark {
+  position: sticky;
+  top: 6rem;
+}
+.about__logo {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 32px rgba(201, 168, 76, 0.15));
+}
+
+.about__bio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  color: var(--color-white-dim);
+  font-size: var(--text-base);
+  line-height: 1.75;
+  max-width: 66ch;
+}
+
+.about__certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+.about__certs span {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-gold-dim);
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 2px;
+}
+
+.about__linkedin {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-gold);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  padding-bottom: 2px;
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+.about__linkedin:hover {
+  color: var(--color-gold-light);
+  border-color: var(--color-gold);
+}
+
+@media (max-width: 768px) {
+  .about__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .about__mark {
+    position: static;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .about__logo { width: 80px; height: 80px; }
+}
+</style>

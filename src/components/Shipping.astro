@@ -1,0 +1,120 @@
+---
+const products = [
+  {
+    name: 'Roxanne',
+    desc: 'AI dating messaging assistant for grown-ups.',
+    url: 'https://www.getroxanne.com/',
+    label: 'getroxanne.com',
+  },
+  {
+    name: 'SkinSimple',
+    desc: 'Skincare scanner — personalized product scores based on your skin.',
+    url: 'https://apps.apple.com/us/app/skinsimple-skincare-scanner/id6758970131',
+    label: 'App Store',
+  },
+  {
+    name: 'SW\u00d8RD',
+    desc: 'A word game. Like Jotto, but sharper.',
+    url: null,
+    label: 'Coming soon',
+  },
+];
+---
+
+<section class="shipping section" id="shipping" aria-labelledby="shipping-heading">
+  <div class="container">
+    <span class="section-eyebrow" data-reveal>Also shipping</span>
+    <h2 class="shipping__heading" id="shipping-heading" data-reveal data-delay="1">
+      Niche mobile apps on the side
+    </h2>
+    <ul class="shipping__list" role="list" data-reveal data-delay="2">
+      {products.map(p => (
+        <li class="shipping__item">
+          <span class="shipping__name">{p.name}</span>
+          <span class="shipping__dash">—</span>
+          <span class="shipping__desc">{p.desc}</span>
+          {p.url ? (
+            <a href={p.url} target="_blank" rel="noopener noreferrer" class="shipping__link">{p.label}</a>
+          ) : (
+            <span class="shipping__soon">{p.label}</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+.shipping {
+  background: var(--color-navy-mid);
+  padding-block: var(--space-16);
+}
+
+.shipping__heading {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  color: var(--color-white-dim);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.shipping__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border-top: var(--border-subtle);
+  padding-top: var(--space-6);
+}
+
+.shipping__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: var(--text-sm);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-subtle);
+}
+.shipping__item:last-child { border-bottom: none; }
+
+.shipping__name {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-white);
+}
+
+.shipping__dash {
+  color: var(--color-gold-dim);
+}
+
+.shipping__desc {
+  color: var(--color-white-dim);
+  flex: 1 1 auto;
+}
+
+.shipping__link {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-gold);
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  padding-bottom: 1px;
+  white-space: nowrap;
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+.shipping__link:hover {
+  color: var(--color-gold-light);
+  border-color: var(--color-gold);
+}
+
+.shipping__soon {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: rgba(244, 240, 232, 0.3);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+</style>

@@ -1,0 +1,10 @@
+name = "amilliondreams"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "./dist"
+
+[vars]
+# PUBLIC_TURNSTILE_SITE_KEY set here once you have it from Cloudflare dashboard
+# CONTACT_TO and TURNSTILE_SECRET_KEY must be set as encrypted secrets in Pages dashboard
+
+[[send_email]]
+name = "EMAIL"

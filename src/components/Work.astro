@@ -1,0 +1,139 @@
+---
+const cases = [
+  {
+    tag: 'UX/UI — Federal contractor',
+    title: 'Emergency redesign of high-stakes government web forms',
+    body: 'Three-month engagement to rescue UX/UI design, implementation, and QA on multiple information-dense, regulated, sensitive web form applications for a federal government contractor. Managed employees, led client communication, hit tight weekly deliverables.',
+    signals: ['Federal / regulated', 'Team management', 'UX + UI + QA'],
+  },
+  {
+    tag: 'SEO/GEO — Established company',
+    title: 'Built organic and AI search presence from the ground up',
+    body: "Flat-fee engagement to architect and establish an established company\u2019s ranking across Google and AI tools (ChatGPT, Claude, Perplexity, Grok). Full audit, competitor benchmarking, SME interviews, content design, and copywriting \u2014 all before/after benchmarked.",
+    signals: ['AI search (GEO/AEO)', 'Legacy website', 'Content strategy'],
+  },
+  {
+    tag: 'Automation — Early-stage startup',
+    title: 'Custom social content pipeline and web scraping tooling',
+    body: "Built an automated social media content generation pipeline (TikTok trend research \u2192 draft posts at scale) and custom web scraping tooling to enrich a startup\u2019s dataset from major retailers \u2014 including bot-detection mitigation and data processing scripts.",
+    signals: ['Python automation', 'Data pipeline', 'Social content at scale'],
+  },
+];
+---
+
+<section class="section work" id="work" aria-labelledby="work-heading">
+  <div class="container">
+    <div data-reveal>
+      <span class="section-eyebrow">Selected work</span>
+      <h2 class="section-heading" id="work-heading">Past engagements</h2>
+      <p class="section-sub">
+        Anonymized by default — clients and specifics available on request.
+      </p>
+    </div>
+
+    <ol class="work__list" role="list">
+      {cases.map((c, i) => (
+        <li class="work-item" data-reveal data-delay={String(i + 1)}>
+          <div class="work-item__left">
+            <span class="work-item__num">0{i + 1}</span>
+            <span class="work-item__tag">{c.tag}</span>
+            <h3 class="work-item__title">{c.title}</h3>
+            <p class="work-item__body">{c.body}</p>
+          </div>
+          <ul class="work-item__signals" role="list">
+            {c.signals.map(s => <li>{s}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+.work__list {
+  list-style: none;
+  margin-top: var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: var(--border-subtle);
+}
+
+.work-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: var(--space-8);
+  padding-block: var(--space-10);
+  border-bottom: var(--border-subtle);
+  transition: background var(--duration-base);
+}
+.work-item:hover {
+  background: rgba(201, 168, 76, 0.03);
+}
+
+.work-item__left { min-width: 0; }
+
+.work-item__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-gold-dim);
+  letter-spacing: 0.1em;
+}
+
+.work-item__tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-copper);
+  letter-spacing: 0.08em;
+  margin-top: var(--space-2);
+}
+
+.work-item__title {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-xl), 2.5vw, var(--text-2xl));
+  font-weight: 600;
+  color: var(--color-white);
+  line-height: 1.25;
+  margin-top: var(--space-3);
+}
+
+.work-item__body {
+  font-size: var(--text-base);
+  color: var(--color-white-dim);
+  line-height: 1.7;
+  margin-top: var(--space-3);
+  max-width: 68ch;
+}
+
+.work-item__signals {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.work-item__signals li {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-gold-dim);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .work-item {
+    grid-template-columns: 1fr;
+  }
+  .work-item__signals {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+}
+</style>

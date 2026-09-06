@@ -1,35 +1,41 @@
-# Landing Page Jekyll theme
+# A Million Dreams
 
-Jekyll theme based on [landing-page bootstrap theme ](http://startbootstrap.com/templates/landing-page/)
+Consulting site for [amilliondreams.llc](https://amilliondreams.llc).
 
-## How to use
- - Place a image in `/img/services/`
- - Create posts to display your services. Use the follow as an example:
+**Stack:** Astro + Cloudflare Pages + Pages Function (contact form)
 
-```txt
----
-layout: default
-img: ipad.png
-category: Services
-title: The service title
----
-The description of this service
+## Dev
+
+```bash
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # production build → dist/
+npx wrangler pages dev ./dist  # test Pages Functions locally
 ```
 
-## Demo
-View this jekyll theme in action [here](https://swcool.github.io/landing-page-theme)
+## Deploy
 
-## Screenshot
-![screenshot](https://raw.githubusercontent.com/swcool/landing-page-theme/master/img/screenshot.png)
+Push to `main` — Cloudflare Pages CI builds automatically (once the GitHub integration is connected).
 
-===
+Or manually:
 
-For more Jekyll details, read [documentation](http://jekyllrb.com/).
-This Jekyll theme used [Freelancer Jekyll theme](https://github.com/jeromelachaud/freelancer-theme/) as reference.
+```bash
+npm run build
+npx wrangler pages deploy ./dist
+```
 
-## License
-The contents of this repository are licensed under the [Apache
-2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+## Contact form setup (one-time, Cloudflare dashboard)
 
-## Version
-1.0.1
+1. Enable **Email Routing** for `amilliondreams.llc`; verify your destination inbox.
+2. Create a **Turnstile** widget; add site key as `PUBLIC_TURNSTILE_SITE_KEY` env var in Pages settings.
+3. Add Pages **secrets**: `TURNSTILE_SECRET_KEY`, `CONTACT_TO` (your inbox), optionally `CONTACT_FROM`.
+4. Attach custom domain `amilliondreams.llc` in Pages → Custom domains.
+
+## Env vars reference
+
+| Variable | Where | Description |
+|----------|-------|-------------|
+| `PUBLIC_TURNSTILE_SITE_KEY` | Pages env (plain) | Turnstile widget site key |
+| `TURNSTILE_SECRET_KEY` | Pages secret | Turnstile secret key |
+| `CONTACT_TO` | Pages secret | Your real inbox |
+| `CONTACT_FROM` | Pages env (optional) | Send-from address (default: `noreply@amilliondreams.llc`) |

@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap');
+@import './tokens.css';
+
+/* ============================================================
+   Reset & base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--color-navy);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+img, video { display: block; max-width: 100%; }
+
+a { color: inherit; text-decoration: none; }
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-navy);
+}
+
+/* ============================================================
+   Utility classes
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.gold-rule {
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: var(--color-gold);
+  margin-block: var(--space-6);
+}
+
+/* ============================================================
+   Section base
+   ============================================================ */
+.section {
+  padding-block: clamp(var(--space-16), 10vw, var(--space-32));
+}
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-white);
+  margin-top: var(--space-3);
+}
+
+.section-sub {
+  font-size: var(--text-lg);
+  color: var(--color-white-dim);
+  max-width: 56ch;
+  margin-top: var(--space-4);
+  line-height: 1.7;
+}
+
+/* ============================================================
+   Dividers
+   ============================================================ */
+.navy-divider {
+  border: none;
+  border-top: var(--border-subtle);
+  margin: 0;
+}
+
+/* ============================================================
+   Scroll-entrance animation
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity var(--duration-slow) var(--ease-out),
+                transform var(--duration-slow) var(--ease-out);
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  [data-reveal][data-delay="1"] { transition-delay: 100ms; }
+  [data-reveal][data-delay="2"] { transition-delay: 200ms; }
+  [data-reveal][data-delay="3"] { transition-delay: 300ms; }
+  [data-reveal][data-delay="4"] { transition-delay: 400ms; }
+}

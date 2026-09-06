@@ -1,0 +1,160 @@
+---
+// Nav component — sticky, fades in on scroll
+---
+<header class="nav" id="site-nav" role="banner">
+  <div class="nav__inner container">
+    <a href="/" class="nav__brand" aria-label="A Million Dreams — home">
+      <img src="/logo-lantern.png" alt="" class="nav__logo" width="36" height="36" />
+      <span class="nav__name">A Million Dreams</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="nav__cta">Start a conversation</a>
+    </nav>
+    <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav__mobile" id="mobile-menu" hidden>
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Start a conversation</a>
+  </div>
+</header>
+
+<style>
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding-block: 0.875rem;
+  background: transparent;
+  transition: background var(--duration-base) var(--ease-out),
+              backdrop-filter var(--duration-base) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out);
+}
+.nav.is-scrolled {
+  background: rgba(13, 31, 45, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(201, 168, 76, 0.12);
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+.nav__logo {
+  width: 36px; height: 36px;
+  object-fit: contain;
+}
+.nav__name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-white);
+  letter-spacing: -0.01em;
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+.nav__links a {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-white-dim);
+  transition: color var(--duration-fast);
+}
+.nav__links a:hover { color: var(--color-white); }
+.nav__cta {
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  color: var(--color-gold) !important;
+  font-size: var(--text-sm);
+  transition: background var(--duration-fast), color var(--duration-fast) !important;
+}
+.nav__cta:hover {
+  background: var(--color-gold);
+  color: var(--color-navy) !important;
+}
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav__toggle span {
+  display: block;
+  width: 22px; height: 2px;
+  background: var(--color-white);
+  border-radius: 2px;
+  transition: transform var(--duration-base) var(--ease-out),
+              opacity var(--duration-base);
+}
+.nav__toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav__toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav__toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav__mobile {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--gutter) var(--space-6);
+  background: rgba(13, 31, 45, 0.96);
+  border-top: var(--border-subtle);
+}
+.nav__mobile a {
+  padding-block: var(--space-3);
+  font-size: var(--text-lg);
+  color: var(--color-white-dim);
+  border-bottom: var(--border-subtle);
+}
+.nav__mobile a:last-child { border-bottom: none; color: var(--color-gold); }
+
+@media (max-width: 768px) {
+  .nav__links { display: none; }
+  .nav__toggle { display: flex; }
+}
+</style>
+
+<script>
+const nav = document.getElementById('site-nav')!;
+const toggle = nav.querySelector('.nav__toggle') as HTMLButtonElement;
+const mobileMenu = document.getElementById('mobile-menu') as HTMLElement;
+
+// Scroll styling
+const scrollHandler = () => {
+  nav.classList.toggle('is-scrolled', window.scrollY > 40);
+};
+window.addEventListener('scroll', scrollHandler, { passive: true });
+scrollHandler();
+
+// Mobile toggle
+toggle.addEventListener('click', () => {
+  const expanded = toggle.getAttribute('aria-expanded') === 'true';
+  toggle.setAttribute('aria-expanded', String(!expanded));
+  mobileMenu.hidden = expanded;
+});
+
+// Close on link click
+mobileMenu.querySelectorAll('a').forEach(a =>
+  a.addEventListener('click', () => {
+    toggle.setAttribute('aria-expanded', 'false');
+    mobileMenu.hidden = true;
+  })
+);
+</script>

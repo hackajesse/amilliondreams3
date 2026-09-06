@@ -1,0 +1,302 @@
+---
+// Contact section — form POSTs to /api/contact (Cloudflare Pages Function)
+// Turnstile site key read from env at build time; falls back to placeholder
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? 'TURNSTILE_SITE_KEY_PLACEHOLDER';
+---
+
+<section class="section contact" id="contact" aria-labelledby="contact-heading">
+  <div class="container contact__inner">
+
+    <div class="contact__headline" data-reveal>
+      <span class="section-eyebrow">Get in touch</span>
+      <h2 class="section-heading" id="contact-heading">Start a conversation</h2>
+      <p class="section-sub">
+        No intake forms, no sales funnel. Tell me what you're working on
+        and I'll respond within one business day.
+      </p>
+      <a
+        href="https://www.linkedin.com/company/a-million-dreams-llc/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="contact__li-link"
+      >
+        A Million Dreams on LinkedIn
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <form
+      class="contact__form"
+      id="contact-form"
+      method="POST"
+      action="/api/contact"
+      novalidate
+      data-reveal
+      data-delay="1"
+    >
+      <!-- Honeypot — bots fill this, humans don't see it -->
+      <div class="contact__honeypot" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="form-row form-row--two">
+        <div class="form-field">
+          <label for="name">Name <span aria-hidden="true">*</span></label>
+          <input type="text" id="name" name="name" required autocomplete="name" placeholder="Your name" />
+        </div>
+        <div class="form-field">
+          <label for="email">Email <span aria-hidden="true">*</span></label>
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@company.com" />
+        </div>
+      </div>
+
+      <div class="form-row form-row--two">
+        <div class="form-field">
+          <label for="company">Company <span class="optional">(optional)</span></label>
+          <input type="text" id="company" name="company" autocomplete="organization" placeholder="Your company" />
+        </div>
+        <div class="form-field">
+          <label for="need">What do you need?</label>
+          <select id="need" name="need">
+            <option value="" disabled selected>Select a service area</option>
+            <option value="growth">Growth &amp; Visibility (SEO/GEO/AEO)</option>
+            <option value="automation">Automation &amp; Workflows</option>
+            <option value="product">Product &amp; Custom Software</option>
+            <option value="emergency">Emergency Tech Delivery</option>
+            <option value="ai-consulting">AI / Tech Consulting</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="message">Tell me about it <span aria-hidden="true">*</span></label>
+        <textarea id="message" name="message" required rows="5" placeholder="What are you working on? What's the problem or goal?"></textarea>
+      </div>
+
+      <!-- Cloudflare Turnstile -->
+      <div
+        class="cf-turnstile"
+        data-sitekey={turnstileSiteKey}
+        data-theme="dark"
+        data-size="normal"
+        data-callback="onTurnstileSuccess"
+      ></div>
+
+      <button type="submit" class="btn btn--primary form-submit" id="submit-btn">
+        Send message
+      </button>
+
+      <div class="form-status" id="form-status" role="alert" aria-live="polite" hidden></div>
+    </form>
+  </div>
+</section>
+
+<script is:inline>
+// Load Turnstile widget script
+(function() {
+  const s = document.createElement('script');
+  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+  s.async = true; s.defer = true;
+  document.head.appendChild(s);
+})();
+
+function onTurnstileSuccess(token) {
+  window._turnstileToken = token;
+}
+
+const form = document.getElementById('contact-form');
+const status = document.getElementById('form-status');
+const submitBtn = document.getElementById('submit-btn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Validate required fields
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+  const message = form.message.value.trim();
+  if (!name || !email || !message) {
+    showStatus('error', 'Please fill in all required fields.');
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+
+  const data = new FormData(form);
+  if (window._turnstileToken) {
+    data.set('cf-turnstile-response', window._turnstileToken);
+  }
+
+  try {
+    const res = await fetch('/api/contact', { method: 'POST', body: data });
+    if (res.ok) {
+      showStatus('success', "Message sent — I'll be in touch within one business day.");
+      form.reset();
+      submitBtn.textContent = 'Sent';
+    } else {
+      const body = await res.json().catch(() => ({}));
+      showStatus('error', body.message || 'Something went wrong. Try again or reach out on LinkedIn.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send message';
+    }
+  } catch {
+    showStatus('error', 'Network error. Check your connection and try again.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send message';
+  }
+});
+
+function showStatus(type, msg) {
+  status.hidden = false;
+  status.className = 'form-status form-status--' + type;
+  status.textContent = msg;
+}
+</script>
+
+<style>
+.contact {
+  background: var(--color-navy);
+}
+
+.contact__inner {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: var(--space-16);
+  align-items: start;
+}
+
+.contact__li-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--color-gold);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  padding-bottom: 2px;
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+.contact__li-link:hover { color: var(--color-gold-light); border-color: var(--color-gold); }
+
+/* Honeypot */
+.contact__honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Form layout */
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  position: relative;
+}
+
+.form-row--two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-field label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-white-dim);
+  letter-spacing: 0.01em;
+}
+
+.optional {
+  font-weight: 400;
+  color: rgba(244, 240, 232, 0.35);
+  font-size: var(--text-xs);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background: var(--color-navy-mid);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: var(--radius-sm);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  padding: 0.65rem 0.875rem;
+  width: 100%;
+  outline: none;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239c7e3a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.25rem;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: rgba(244, 240, 232, 0.28);
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+}
+
+.form-field textarea { resize: vertical; min-height: 120px; }
+
+.cf-turnstile { margin-top: var(--space-2); }
+
+.form-submit {
+  align-self: flex-start;
+  font-size: var(--text-base);
+  padding: 0.875rem 2rem;
+}
+.form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-status {
+  font-size: var(--text-sm);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid;
+}
+.form-status--success {
+  background: rgba(201, 168, 76, 0.08);
+  border-color: var(--color-gold);
+  color: var(--color-gold-light);
+}
+.form-status--error {
+  background: rgba(184, 115, 51, 0.1);
+  border-color: var(--color-copper);
+  color: var(--color-copper-light);
+}
+
+@media (max-width: 900px) {
+  .contact__inner { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .form-row--two { grid-template-columns: 1fr; }
+}
+</style>

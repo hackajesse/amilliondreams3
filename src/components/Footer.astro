@@ -1,0 +1,63 @@
+---
+// Footer
+---
+<footer class="footer" role="contentinfo">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img src="/logo-lantern.png" alt="A Million Dreams" width="32" height="32" loading="lazy" />
+      <span class="footer__name">A Million Dreams LLC</span>
+    </div>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a href="https://www.linkedin.com/company/a-million-dreams-llc/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+    <p class="footer__copy">&copy; {new Date().getFullYear()} A Million Dreams LLC &middot; Boston, MA</p>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background: var(--color-navy-mid);
+  border-top: var(--border-subtle);
+  padding-block: var(--space-8);
+}
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.footer__name {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--color-white-dim);
+}
+.footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+.footer__nav a {
+  font-size: var(--text-sm);
+  color: rgba(244, 240, 232, 0.45);
+  transition: color var(--duration-fast);
+}
+.footer__nav a:hover { color: var(--color-white-dim); }
+.footer__copy {
+  font-size: var(--text-xs);
+  color: rgba(244, 240, 232, 0.3);
+  letter-spacing: 0.03em;
+}
+@media (max-width: 640px) {
+  .footer__inner { flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+}
+</style>

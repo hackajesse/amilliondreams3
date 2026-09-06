@@ -1,0 +1,129 @@
+---
+const services = [
+  {
+    id: 'growth',
+    tag: '01',
+    title: 'Growth & Visibility',
+    subtitle: 'SEO · GEO · AEO',
+    body: 'Ranking your business at the top of Google and AI tools like ChatGPT, Claude, and Perplexity. Every engagement includes before/after benchmarking so you can see exactly what moved.',
+    detail: 'Full-stack: keyword research, on-page, technical audit, content design, link strategy, generative engine citations, answer engine optimization.',
+  },
+  {
+    id: 'automation',
+    tag: '02',
+    title: 'Automation & Workflows',
+    subtitle: 'Python · Integrations · Lean Six Sigma',
+    body: 'Eliminating tedious admin or data-processing work and speeding up billing cycles. Custom scripts, product integrations, and — when the process needs it — formal Lean Six Sigma improvement methodology.',
+    detail: 'Web scraping, social content pipelines, billing automation, ERP/CRM integration, API wiring, reporting dashboards.',
+  },
+  {
+    id: 'product',
+    tag: '03',
+    title: 'Product & Custom Software',
+    subtitle: 'Research · UX/UI · Mobile · LLMs',
+    body: 'Full-cycle: user research, Agile UX/UI design, and mobile app development — often with LLM-powered features embedded. I design and build the whole thing, or slot into your existing team.',
+    detail: 'iOS apps, web apps, AI feature integration, design systems, prototype-to-production.',
+  },
+  {
+    id: 'emergency',
+    tag: '04',
+    title: 'Emergency Tech Delivery',
+    subtitle: 'PM · UI Rescue · QA',
+    body: 'Rapid-turnaround product management, UI redesign, and QA rescues for complex or regulated systems. If your project is in trouble or on a hard deadline, this is the engagement.',
+    detail: 'Works in regulated environments (federal, healthcare, finance). Tight deadlines, nuanced systems, sensitive data — been there.',
+  },
+];
+---
+
+<section class="section services" id="services" aria-labelledby="services-heading">
+  <div class="container">
+    <div class="services__header" data-reveal>
+      <span class="section-eyebrow">What I do</span>
+      <h2 class="section-heading" id="services-heading">Services</h2>
+      <p class="section-sub">
+        Four areas where I consistently deliver. No retainer minimums—engagement
+        structure is scoped to fit the work.
+      </p>
+    </div>
+
+    <div class="services__grid">
+      {services.map((s, i) => (
+        <article class="service-card" data-reveal data-delay={String(i + 1)}>
+          <span class="service-card__tag">{s.tag}</span>
+          <h3 class="service-card__title">{s.title}</h3>
+          <p class="service-card__subtitle">{s.subtitle}</p>
+          <p class="service-card__body">{s.body}</p>
+          <p class="service-card__detail">{s.detail}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.services {
+  background: var(--color-navy-mid);
+}
+
+.services__header {
+  margin-bottom: var(--space-12);
+}
+
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+  gap: 1px;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.1);
+}
+
+.service-card {
+  background: var(--color-navy-mid);
+  padding: var(--space-8) var(--space-8) var(--space-8);
+  transition: background var(--duration-base) var(--ease-out);
+}
+.service-card:hover {
+  background: var(--color-navy-light);
+}
+
+.service-card__tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-gold-dim);
+  letter-spacing: 0.12em;
+}
+
+.service-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-white);
+  margin-top: var(--space-3);
+  line-height: 1.2;
+}
+
+.service-card__subtitle {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-copper);
+  letter-spacing: 0.1em;
+  margin-top: var(--space-2);
+}
+
+.service-card__body {
+  font-size: var(--text-base);
+  color: var(--color-white-dim);
+  margin-top: var(--space-4);
+  line-height: 1.7;
+}
+
+.service-card__detail {
+  font-size: var(--text-sm);
+  color: rgba(244, 240, 232, 0.44);
+  margin-top: var(--space-4);
+  line-height: 1.65;
+  font-style: italic;
+  border-top: var(--border-subtle);
+  padding-top: var(--space-4);
+}
+</style>

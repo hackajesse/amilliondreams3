@@ -1,0 +1,64 @@
+/* ============================================================
+   Design tokens — A Million Dreams
+   ============================================================ */
+:root {
+  /* Palette */
+  --color-navy:        #0d1f2d;
+  --color-navy-mid:    #132435;
+  --color-navy-light:  #1b3148;
+  --color-gold:        #c9a84c;
+  --color-gold-light:  #e0bb6e;
+  --color-gold-dim:    #9c7e3a;
+  --color-copper:      #b87333;
+  --color-copper-light:#d4884a;
+  --color-white:       #f4f0e8;
+  --color-white-dim:   rgba(244, 240, 232, 0.72);
+  --color-white-faint: rgba(244, 240, 232, 0.30);
+  --color-overlay:     rgba(13, 31, 45, 0.72);
+
+  /* Typography */
+  --font-display: 'Playfair Display', 'Georgia', serif;
+  --font-body:    'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'DM Mono', 'Fira Mono', monospace;
+
+  /* Scale */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  2rem;
+  --text-4xl:  2.75rem;
+  --text-5xl:  3.75rem;
+
+  /* Spacing */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Layout */
+  --max-width: 1120px;
+  --gutter:    clamp(1.25rem, 5vw, 3rem);
+
+  /* Motion */
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:   cubic-bezier(0.64, 0, 0.78, 0);
+  --duration-fast:   150ms;
+  --duration-base:   300ms;
+  --duration-slow:   600ms;
+  --duration-xslow: 1000ms;
+
+  /* Border */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --border-subtle: 1px solid rgba(201, 168, 76, 0.18);
+}
