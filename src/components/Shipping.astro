@@ -8,7 +8,7 @@ const products = [
   },
   {
     name: 'SkinSimple',
-    desc: 'Skincare scanner — personalized product scores based on your skin.',
+    desc: 'Skincare scanner: personalized product scores based on your skin.',
     url: 'https://apps.apple.com/us/app/skinsimple-skincare-scanner/id6758970131',
     label: 'App Store',
   },
@@ -31,7 +31,7 @@ const products = [
       {products.map(p => (
         <li class="shipping__item">
           <span class="shipping__name">{p.name}</span>
-          <span class="shipping__dash">—</span>
+          <span class="shipping__dash">·</span>
           <span class="shipping__desc">{p.desc}</span>
           {p.url ? (
             <a href={p.url} target="_blank" rel="noopener noreferrer" class="shipping__link">{p.label}</a>
