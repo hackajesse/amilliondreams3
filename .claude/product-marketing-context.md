@@ -1,10 +1,10 @@
 # Product marketing context — A Million Dreams
 
 ## What this is
-Solo consulting practice (Jesse Biroscak / A Million Dreams LLC). Flat-fee, scoped work. Boston-based.
+Solo consulting practice (Jesse Biroscak / A Million Dreams LLC). Flat-fee, scoped work. Based in Boston; work remotely or on-site with teams across the U.S.
 
 ## Audience
-Founders and ops leads at startups and mid-size companies who need ranking, automation, or software shipped — not strategy decks.
+Founders and ops leads at startups and mid-size companies who need ranking, process improvement, or software shipped — not strategy decks.
 
 ## Primary action
 Contact form → reply within one business day.

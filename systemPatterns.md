@@ -27,4 +27,5 @@ Nav → Hero → Services → Work → About → Shipping → Contact → Footer
 - Brand: "A Million Dreams" / "A Million Dreams LLC"
 - Domain: amilliondreams.llc
 - Founder: Jesse Biroscak
-- Location signal: Boston, MA
+- Location signal: Boston, MA (remote or on-site with teams across the U.S.)
+- Services pillar 02: Process & Automation (process-first; tech only after the process is worth running)
