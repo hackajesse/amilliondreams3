@@ -3,8 +3,8 @@
 ## What this is
 
 Solo consulting practice (Jesse Biroscak / A Million Dreams LLC).
-Flat-fee, scoped work. Based in Boston; work remotely or on-site with teams
-across the U.S.
+Scoped work as project, hourly, or retainer. Based in Boston; work remotely
+or on-site with teams across the U.S.
 
 ## Audience
 

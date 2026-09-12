@@ -14,29 +14,25 @@
   </div>
 
   <div class="hero__content container">
-    <p class="hero__eyebrow" data-reveal>Tech &amp; AI Consulting</p>
+    <p class="hero__eyebrow" data-reveal>Tech, AI &amp; Process Consulting</p>
     <h1 class="hero__headline" data-reveal data-delay="1">
-      Ranking, automation,<br />and software that&nbsp;ships.
+      Hands-on consulting for SEO, process, and&nbsp;software.
     </h1>
     <p class="hero__sub" data-reveal data-delay="2">
-      I work with startups and mid-size companies on SEO (Google and AI search),
-      workflow automation, custom builds, and deadline rescues. Flat-fee. Scoped to the job.
+      SEO and AI search, process improvement, automation, custom software, and deadline rescues.
+      Project, hourly, or retainer — scoped to the work. Based in Boston; remote or on-site across the U.S.
     </p>
     <div class="hero__actions" data-reveal data-delay="3">
       <a href="#contact" class="btn btn--primary">Start a conversation</a>
       <a href="#services" class="btn btn--ghost">See services</a>
     </div>
   </div>
-
-  <div class="hero__scroll-cue" aria-hidden="true">
-    <span></span>
-  </div>
 </section>
 
 <style>
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: 78svh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -80,8 +76,8 @@
 .hero__content {
   position: relative;
   z-index: 1;
-  padding-top: 8rem;
-  padding-bottom: 6rem;
+  padding-top: 6.5rem;
+  padding-bottom: 3.5rem;
   max-width: 680px;
 }
 
@@ -96,16 +92,16 @@
 
 .hero__headline {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   font-weight: 700;
-  line-height: 1.08;
+  line-height: 1.1;
   color: var(--color-white);
   letter-spacing: -0.02em;
 }
 
 .hero__sub {
-  margin-top: var(--space-6);
-  font-size: clamp(var(--text-base), 2vw, var(--text-xl));
+  margin-top: var(--space-4);
+  font-size: clamp(var(--text-base), 2vw, var(--text-lg));
   color: var(--color-white-dim);
   line-height: 1.65;
   max-width: 52ch;
@@ -115,7 +111,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
-  margin-top: var(--space-8);
+  margin-top: var(--space-6);
 }
 
 /* Shared button styles */
@@ -161,29 +157,8 @@
   color: var(--color-navy);
 }
 
-/* Scroll cue */
-.hero__scroll-cue {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-}
-.hero__scroll-cue span {
-  display: block;
-  width: 1px;
-  height: 56px;
-  background: linear-gradient(to bottom, transparent, var(--color-gold-dim));
-  animation: scroll-cue 2s ease-in-out infinite;
-  margin-inline: auto;
-}
-@keyframes scroll-cue {
-  0%, 100% { transform: scaleY(0); transform-origin: top; }
-  50%       { transform: scaleY(1); transform-origin: top; }
-}
-
 @media (max-width: 600px) {
-  .hero__content { padding-top: 7rem; }
+  .hero__content { padding-top: 5.5rem; padding-bottom: 2.5rem; }
   .hero__actions { flex-direction: column; }
   .btn { justify-content: center; }
 }
