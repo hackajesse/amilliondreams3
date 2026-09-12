@@ -6,14 +6,12 @@ pages_build_output_dir = "./dist"
 PUBLIC_TURNSTILE_SITE_KEY = "0x4AAAAAAEp3vW0v0bnYDXkK"
 # TURNSTILE_HOSTNAMES defaults to "amilliondreams.llc,amilliondreams.pages.dev" in the function
 
-# Secrets (set in Pages dashboard → Settings → Environment variables):
-#   TURNSTILE_SECRET_KEY   — Cloudflare Turnstile secret key
-#   CONTACT_TO             — your real inbox address
-#   CONTACT_FROM           — send-from address (optional, default: noreply@amilliondreams.llc)
+# Pages env (dashboard → Settings → Environment variables, Production):
+#   TURNSTILE_SECRET_KEY   — Turnstile secret
+#   MAILER_URL             — amd-mailer base URL (no /send), e.g. https://amd-mailer.<account>.workers.dev
+#   MAILER_SECRET          — shared secret; must match Worker MAILER_SECRET
+#   CONTACT_TO             — websiteinquiry@amilliondreams.llc
+#   CONTACT_FROM           — Workspace sender (jesse@amilliondreams.llc); must match Gmail OAuth user
 #
-# Email is sent via the amd-mailer Worker (workers/mailer/).
-# The Pages Function calls it via fetch("https://amd-mailer.<account>.workers.dev/send")
-# with a shared MAILER_SECRET for auth.
-# Set MAILER_SECRET as an encrypted secret in both:
-#   - Pages dashboard (used by the Pages Function to authenticate outbound calls)
-#   - amd-mailer Worker secrets (used to verify incoming calls)
+# Email: Pages Function → amd-mailer Worker → Gmail API.
+# Inbound: Google Workspace MX. Do not enable Cloudflare Email Routing.

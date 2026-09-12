@@ -5,7 +5,8 @@
 - **Astro 7** static site (`output: 'static'`)
 - **Cloudflare Pages** hosting + GitHub CI deploy
 - **Cloudflare Pages Function** at `functions/api/contact.js` for contact form
-- **amd-mailer Worker** (`workers/mailer/`) for email send (Pages cannot use `send_email`)
+- **amd-mailer Worker** (`workers/mailer/`) sends contact mail via **Gmail API** (Workspace OAuth)
+- **Inbound mail:** Google Workspace MX (not Cloudflare Email Routing)
 - **Turnstile** bot protection on contact form
 - No CMS, no content collections, no markdown content pipeline
 

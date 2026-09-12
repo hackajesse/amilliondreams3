@@ -1,14 +1,18 @@
 /**
  * amd-mailer — Cloudflare Worker
  *
- * Accepts POST /send with a JSON body from the amilliondreams Pages Function.
- * Authenticates via a shared MAILER_SECRET header.
- * Sends email via the send_email (EMAIL) binding.
+ * Accepts POST /send with JSON from the amilliondreams Pages Function.
+ * Authenticates via shared MAILER_SECRET header.
+ * Sends via Gmail API (Workspace user OAuth refresh token).
  *
- * Environment:
- *   EMAIL         — send_email binding (wrangler.toml)
- *   MAILER_SECRET — shared secret (wrangler secret put MAILER_SECRET)
+ * Secrets (wrangler secret put … --name amd-mailer):
+ *   MAILER_SECRET
+ *   GMAIL_CLIENT_ID
+ *   GMAIL_CLIENT_SECRET
+ *   GMAIL_REFRESH_TOKEN
  */
+
+import { sendViaGmail } from './gmail.js';
 
 export default {
   async fetch(request, env) {
@@ -16,10 +20,9 @@ export default {
       return new Response('Not found', { status: 404 });
     }
 
-    // Auth — constant-time comparison via WebCrypto
     const incomingSecret = request.headers.get('x-mailer-secret') ?? '';
     const expectedSecret = env.MAILER_SECRET ?? '';
-    if (!expectedSecret || !await timingSafeEqual(incomingSecret, expectedSecret)) {
+    if (!expectedSecret || !(await timingSafeEqual(incomingSecret, expectedSecret))) {
       return new Response('Forbidden', { status: 403 });
     }
 
@@ -36,7 +39,7 @@ export default {
     }
 
     try {
-      await env.EMAIL.send({ to, from, replyTo, subject, text, html });
+      await sendViaGmail(env, { to, from, replyTo, subject, text, html });
       return new Response(JSON.stringify({ ok: true }), {
         headers: { 'Content-Type': 'application/json' },
       });
@@ -52,8 +55,20 @@ export default {
 
 async function timingSafeEqual(a, b) {
   const enc = new TextEncoder();
-  const ka = await crypto.subtle.importKey('raw', enc.encode(a), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const kb = await crypto.subtle.importKey('raw', enc.encode(b), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const ka = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(a),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const kb = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(b),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
   const buf = enc.encode('compare');
   const [sa, sb] = await Promise.all([
     crypto.subtle.sign('HMAC', ka, buf),

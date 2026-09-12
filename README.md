@@ -2,7 +2,7 @@
 
 Consulting site for [amilliondreams.llc](https://amilliondreams.llc).
 
-**Stack:** Astro + Cloudflare Pages + Pages Function (contact form)
+**Stack:** Astro + Cloudflare Pages + Pages Function (contact form) + `amd-mailer` Worker (Gmail API)
 
 ## Dev
 
@@ -24,18 +24,42 @@ npm run build
 npx wrangler pages deploy ./dist
 ```
 
-## Contact form setup (one-time, Cloudflare dashboard)
+## Contact form setup
 
-1. Enable **Email Routing** for `amilliondreams.llc`; verify your destination inbox.
-2. Create a **Turnstile** widget; add site key as `PUBLIC_TURNSTILE_SITE_KEY` env var in Pages settings.
-3. Add Pages **secrets**: `TURNSTILE_SECRET_KEY`, `CONTACT_TO` (your inbox), optionally `CONTACT_FROM`.
-4. Attach custom domain `amilliondreams.llc` in Pages → Custom domains.
+Inbound mail is **Google Workspace** (MX). Do **not** enable Cloudflare Email Routing.
 
-## Env vars reference
+Outbound uses the **`amd-mailer`** Worker → **Gmail API** (OAuth refresh token for a Workspace user).
 
-| Variable | Where | Description |
-|----------|-------|-------------|
-| `PUBLIC_TURNSTILE_SITE_KEY` | Pages env (plain) | Turnstile widget site key |
-| `TURNSTILE_SECRET_KEY` | Pages secret | Turnstile secret key |
-| `CONTACT_TO` | Pages secret | Your real inbox |
-| `CONTACT_FROM` | Pages env (optional) | Send-from address (default: `noreply@amilliondreams.llc`) |
+### 1. Google (one-time)
+1. Cloud Console: enable **Gmail API**; OAuth consent + **Web application** client with redirect `http://localhost`.
+2. Authorize as the From user (e.g. `jesse@amilliondreams.llc`) with scope `gmail.send`; save the refresh token.
+3. Details: see project plan / Bitwarden item `AMD Contact Mailer (Gmail OAuth)`.
+
+### 2. Deploy the mailer Worker
+
+```bash
+cd workers/mailer
+npx wrangler secret put MAILER_SECRET --name amd-mailer
+npx wrangler secret put GMAIL_CLIENT_ID --name amd-mailer
+npx wrangler secret put GMAIL_CLIENT_SECRET --name amd-mailer
+npx wrangler secret put GMAIL_REFRESH_TOKEN --name amd-mailer
+npx wrangler deploy
+```
+
+Copy the printed `*.workers.dev` URL (no `/send`) into Pages as `MAILER_URL`.
+
+### 3. Pages env (Production)
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `PUBLIC_TURNSTILE_SITE_KEY` | Plain | Turnstile site key |
+| `TURNSTILE_SECRET_KEY` | Secret | Turnstile secret key |
+| `MAILER_URL` | Plain | e.g. `https://amd-mailer.<subdomain>.workers.dev` |
+| `MAILER_SECRET` | Secret | Same value as Worker `MAILER_SECRET` |
+| `CONTACT_TO` | Secret | `websiteinquiry@amilliondreams.llc` |
+| `CONTACT_FROM` | Plain/Secret | Workspace sender, e.g. `jesse@amilliondreams.llc` (must match OAuth user) |
+
+### 4. Turnstile + domain
+Create a Turnstile widget; attach custom domain `amilliondreams.llc` in Pages if needed.
+
+Ignore Cloudflare “missing MX” warnings for Email Routing — Workspace owns inbound MX.

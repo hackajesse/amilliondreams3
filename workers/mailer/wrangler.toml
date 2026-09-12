@@ -2,9 +2,11 @@ name = "amd-mailer"
 main = "index.js"
 compatibility_date = "2025-01-01"
 
-[[send_email]]
-name = "EMAIL"
-destination_address = "jesse.biroscak@gmail.com"
-
-# Secrets (set via: wrangler secret put MAILER_SECRET --name amd-mailer):
-#   MAILER_SECRET  — shared secret; must match MAILER_SECRET in Pages env vars
+# Inbound mail: Google Workspace MX (do not enable Cloudflare Email Routing).
+# Outbound: Gmail API via OAuth refresh token (no Cloudflare send_email / Email Sending).
+#
+# Secrets (wrangler secret put NAME --name amd-mailer):
+#   MAILER_SECRET         — shared with Pages MAILER_SECRET
+#   GMAIL_CLIENT_ID       — Google OAuth Web client ID
+#   GMAIL_CLIENT_SECRET   — Google OAuth Web client secret
+#   GMAIL_REFRESH_TOKEN   — offline token for jesse@amilliondreams.llc (gmail.send)

@@ -6,13 +6,13 @@
  *   2. Required fields (name, email, message)
  *   3. Cloudflare Turnstile token
  *
- * Sends email via the amd-mailer Worker (Workers support send_email; Pages does not).
+ * Sends email via the amd-mailer Worker (Gmail API).
  *
  * Environment:
  *   MAILER_URL        — Worker URL, e.g. https://amd-mailer.<subdomain>.workers.dev
  *   MAILER_SECRET     — shared secret matching the Worker's MAILER_SECRET
- *   CONTACT_TO        — encrypted secret: destination inbox
- *   CONTACT_FROM      — optional var: sending address, defaults to noreply@amilliondreams.llc
+ *   CONTACT_TO        — destination inbox (websiteinquiry@amilliondreams.llc)
+ *   CONTACT_FROM      — Workspace sender (must match Gmail OAuth user), e.g. jesse@amilliondreams.llc
  *   TURNSTILE_SECRET_KEY — encrypted secret: Turnstile secret key
  *   TURNSTILE_HOSTNAMES  — optional: comma-separated hostname allowlist
  */
