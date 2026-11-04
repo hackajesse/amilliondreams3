@@ -1,0 +1,53 @@
+---
+import { render } from 'astro:content';
+import { postPath } from '@blog-cms/astro';
+import BlogPostHead from '@blog-cms/astro/BlogPostHead.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogFrame from '../components/blog/BlogFrame.astro';
+import { publishedPosts, termSlug } from '../lib/posts.ts';
+import { site } from '../blog/site.ts';
+
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  return posts.map((post) => {
+    const href = postPath(site.permalink, post.id, post.data.publishDate, site.timezone);
+    const path = href.replace(/^\/+|\/+$/g, '');
+    if (path === '') throw new Error(`Permalink for ${post.id} did not produce a path.`);
+    return { params: { path }, props: { post } };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const tags = post.data.tags ?? [];
+const categories = post.data.categories ?? [];
+---
+
+<BaseLayout>
+  <BlogPostHead slot="head" post={post} site={site} />
+  <BlogFrame>
+    <article>
+      <h1>{post.data.title}</h1>
+      {post.data.publishDate ? (
+        <p><time datetime={post.data.publishDate}>{post.data.publishDate.slice(0, 10)}</time></p>
+      ) : null}
+      <div class="prose">
+        <Content />
+      </div>
+      {tags.length > 0 ? (
+        <ul class="terms">
+          {tags.map((tag) => (
+            <li><a href={`/tags/${termSlug(tag)}/`}>{tag}</a></li>
+          ))}
+        </ul>
+      ) : null}
+      {categories.length > 0 ? (
+        <ul class="terms">
+          {categories.map((category) => (
+            <li><a href={`/categories/${termSlug(category)}/`}>{category}</a></li>
+          ))}
+        </ul>
+      ) : null}
+    </article>
+  </BlogFrame>
+</BaseLayout>

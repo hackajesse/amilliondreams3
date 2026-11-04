@@ -1,6 +1,10 @@
 _site
 node_modules
 dist
+!vendor/blog-cms/contract/dist/
+!vendor/blog-cms/astro/dist/
+!vendor/blog-cms/contract/dist/**
+!vendor/blog-cms/astro/dist/**
 .astro
 .wrangler
 .env

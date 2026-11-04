@@ -1,0 +1,32 @@
+---
+import { postPath } from '@blog-cms/astro';
+import { site } from '../../blog/site.ts';
+
+interface PostLink {
+  id: string;
+  data: { title: string; publishDate?: string };
+}
+
+interface Props {
+  posts: readonly PostLink[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length === 0 ? (
+    <p>No posts yet.</p>
+  ) : (
+    <ul class="post-list">
+      {posts.map((post) => (
+        <li>
+          <a href={postPath(site.permalink, post.id, post.data.publishDate, site.timezone)}>{post.data.title}</a>
+          {post.data.publishDate ? (
+            <time datetime={post.data.publishDate}>{post.data.publishDate.slice(0, 10)}</time>
+          ) : null}
+        </li>
+      ))}
+    </ul>
+  )
+}

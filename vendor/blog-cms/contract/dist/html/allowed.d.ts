@@ -1,0 +1,26 @@
+export declare const ALLOWED_ELEMENTS: {
+    readonly p: readonly [];
+    readonly h2: readonly [];
+    readonly h3: readonly [];
+    readonly strong: readonly [];
+    readonly em: readonly [];
+    readonly br: readonly [];
+    readonly hr: readonly [];
+    readonly ul: readonly [];
+    readonly ol: readonly [];
+    readonly li: readonly [];
+    readonly blockquote: readonly [];
+    readonly a: readonly ["href"];
+    readonly figure: readonly [];
+    readonly img: readonly ["src", "alt", "width", "height"];
+    readonly figcaption: readonly [];
+};
+export type AllowedElement = keyof typeof ALLOWED_ELEMENTS;
+export declare const LOCKED_BLOCK_ATTRIBUTE = "data-raw-html";
+export declare const LOCKED_BLOCK_OPEN_TAG = "<div data-raw-html>";
+export declare const LOCKED_BLOCK_CLOSE_TAG = "</div>";
+export declare function isAllowedElement(tag: string): tag is AllowedElement;
+export declare function allowedAttributes(tag: string): readonly string[];
+export declare function isAllowedHref(href: string): boolean;
+export declare function isAllowedImageSrc(src: string): boolean;
+export declare function isAllowedDimension(value: string): boolean;

@@ -1,0 +1,29 @@
+---
+import Listing from '../../../../components/blog/Listing.astro';
+import { pageHref, paginate } from '../../../../lib/paging.ts';
+import { groupByTerm, publishedPosts } from '../../../../lib/posts.ts';
+import { site } from '../../../../blog/site.ts';
+
+export async function getStaticPaths() {
+  const groups = groupByTerm(await publishedPosts(), 'tags');
+  return groups.flatMap((group) => {
+    const chunks = paginate(group.posts, site.pageSize);
+    return chunks.slice(1).map((posts, index) => ({
+      params: { tag: group.slug, page: String(index + 2) },
+      props: {
+        name: group.name,
+        slug: group.slug,
+        posts,
+        page: index + 2,
+        pages: chunks.length,
+        noindex: group.posts.length < 3,
+      },
+    }));
+  });
+}
+
+const { name, slug, posts, page, pages, noindex } = Astro.props;
+const hrefFor = (number: number) => pageHref(`/tags/${slug}`, number);
+---
+
+<Listing heading={name} posts={posts} page={page} pages={pages} hrefFor={hrefFor} noindex={noindex} />

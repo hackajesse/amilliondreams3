@@ -1,0 +1,21 @@
+---
+interface Props {
+  page: number;
+  pages: number;
+  hrefFor: (page: number) => string;
+}
+
+const { page, pages, hrefFor } = Astro.props;
+---
+
+{
+  pages > 1 ? (
+    <nav class="pager" aria-label="Pagination">
+      {page > 1 ? <a href={hrefFor(page - 1)}>Previous</a> : null}
+      <span>
+        Page {page} of {pages}
+      </span>
+      {page < pages ? <a href={hrefFor(page + 1)}>Next</a> : null}
+    </nav>
+  ) : null
+}

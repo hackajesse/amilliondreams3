@@ -1,0 +1,18 @@
+---
+// The query keeps this CSS a separate module from the homepage bundle.
+import '../../styles/global.css?blog';
+import '../../styles/blog.css';
+---
+
+<main class="blog-page">
+  <div class="container blog-page__inner">
+    <nav class="blog-page__nav" aria-label="Blog">
+      <a href="/">A Million Dreams</a>
+      <a href="/blog/">Blog</a>
+      <a href="/tags/">Tags</a>
+      <a href="/categories/">Categories</a>
+      <a href="/feed/">Feed</a>
+    </nav>
+    <slot />
+  </div>
+</main>

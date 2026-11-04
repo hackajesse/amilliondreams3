@@ -1,0 +1,23 @@
+---
+import { absoluteUrl } from '@blog-cms/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogFrame from '../../components/blog/BlogFrame.astro';
+import { groupByTerm, publishedPosts } from '../../lib/posts.ts';
+import { site } from '../../blog/site.ts';
+
+const groups = groupByTerm(await publishedPosts(), 'tags');
+---
+
+<BaseLayout title="Tags" canonical={absoluteUrl(site.url, '/tags/')} ogImage={site.defaultImage}>
+  <BlogFrame>
+    <h1>Tags</h1>
+    <ul class="terms">
+      {groups.map((group) => (
+        <li>
+          <a href={`/tags/${group.slug}/`}>{group.name}</a>
+          <span class="muted"> {group.posts.length}</span>
+        </li>
+      ))}
+    </ul>
+  </BlogFrame>
+</BaseLayout>

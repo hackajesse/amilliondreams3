@@ -1,11 +1,13 @@
 ---
-import '../styles/global.css';
+import { absoluteUrl } from '@blog-cms/astro';
+import { site } from '../blog/site.ts';
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
   canonical?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -13,9 +15,12 @@ const {
   description = 'Jesse Biroscak helps companies with SEO and AI search, business process improvement, workflow automation, custom software, and emergency tech delivery. Project, hourly, or retainer. Based in Boston; work remotely or on-site with teams across the U.S.',
   ogImage = '/og-image.png',
   canonical = 'https://amilliondreams.llc',
+  noindex = false,
 } = Astro.props;
 
 const fullTitle = title.includes('A Million Dreams') ? title : `${title} | A Million Dreams`;
+const ownsHead = Astro.slots.has('head');
+const feedUrl = absoluteUrl(site.url, site.feedPath);
 
 const jsonLd = JSON.stringify({
   "@context": "https://schema.org",
@@ -58,24 +63,33 @@ const jsonLd = JSON.stringify({
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO -->
-    <title>{fullTitle}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {ownsHead ? (
+      <slot name="head" />
+    ) : (
+      <>
+        <!-- SEO -->
+        <title>{fullTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        {noindex ? <meta name="robots" content="noindex" /> : null}
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={`https://amilliondreams.llc${ogImage}`} />
-    <meta property="og:site_name" content="A Million Dreams LLC" />
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={`https://amilliondreams.llc${ogImage}`} />
+        <meta property="og:site_name" content="A Million Dreams LLC" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`https://amilliondreams.llc${ogImage}`} />
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={fullTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={`https://amilliondreams.llc${ogImage}`} />
+      </>
+    )}
+
+    <link rel="alternate" type="application/rss+xml" title={site.name} href={feedUrl} />
 
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="/favicon.png" />

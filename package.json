@@ -11,6 +11,11 @@
     "preview": "astro preview",
     "astro": "astro"
   },
+  "dependencies": {
+    "@astrojs/rss": "4.0.19",
+    "@blog-cms/astro": "file:vendor/blog-cms/astro",
+    "@blog-cms/contract": "file:vendor/blog-cms/contract"
+  },
   "allowScripts": {
     "esbuild": true,
     "workerd@1.20260903.1": true,
