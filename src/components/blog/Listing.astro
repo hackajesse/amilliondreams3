@@ -1,0 +1,38 @@
+---
+import { absoluteUrl } from '@blog-cms/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogFrame from './BlogFrame.astro';
+import Pager from './Pager.astro';
+import PostList from './PostList.astro';
+import { site } from '../../blog/site.ts';
+
+interface PostLink {
+  id: string;
+  data: { title: string; publishDate?: string };
+}
+
+interface Props {
+  heading: string;
+  posts: readonly PostLink[];
+  page: number;
+  pages: number;
+  hrefFor: (page: number) => string;
+  noindex?: boolean;
+}
+
+const { heading, posts, page, pages, hrefFor, noindex = false } = Astro.props;
+const label = page > 1 ? `${heading}, page ${page}` : heading;
+---
+
+<BaseLayout
+  title={label}
+  canonical={absoluteUrl(site.url, hrefFor(page))}
+  ogImage={site.defaultImage}
+  noindex={noindex}
+>
+  <BlogFrame>
+    <h1>{heading}</h1>
+    <PostList posts={posts} />
+    <Pager page={page} pages={pages} hrefFor={hrefFor} />
+  </BlogFrame>
+</BaseLayout>

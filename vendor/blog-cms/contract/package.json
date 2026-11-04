@@ -1,0 +1,17 @@
+{
+  "name": "@blog-cms/contract",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "dependencies": {
+    "parse5": "8.0.1",
+    "yaml": "2.9.1"
+  }
+}

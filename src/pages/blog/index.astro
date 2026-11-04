@@ -1,0 +1,11 @@
+---
+import Listing from '../../components/blog/Listing.astro';
+import { pageHref, paginate } from '../../lib/paging.ts';
+import { publishedPosts } from '../../lib/posts.ts';
+import { site } from '../../blog/site.ts';
+
+const pages = paginate(await publishedPosts(), site.pageSize);
+const hrefFor = (page: number) => pageHref('/blog', page);
+---
+
+<Listing heading="Blog" posts={pages[0] ?? []} page={1} pages={pages.length} hrefFor={hrefFor} />
