@@ -13,7 +13,7 @@ export default defineConfig({
       name: 'site-files',
       hooks: {
         'astro:config:setup': ({ injectRoute }) => {
-          injectRoute({ pattern: site.feedPath, entrypoint: feed, prerender: true });
+          injectRoute({ pattern: '/feed.xml', entrypoint: feed, prerender: true });
           injectRoute({ pattern: site.sitemapPath, entrypoint: sitemap, prerender: true });
         },
       },
